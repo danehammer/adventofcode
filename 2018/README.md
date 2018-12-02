@@ -2,7 +2,7 @@
 
 Documenting my thoughts as I use these puzzles to learn about Rust.
 
-# Day 1
+### Day 1
 
 First part was easy, just google how to read lines of a file, do some arithmetic. Avoided doing two passes.
 
@@ -36,3 +36,9 @@ error[E0382]: use of moved value: `changes`
 But that was just changing `for change in changes` to `for change in &changes`.
 
 The other fun thing I learned about was the ability to use the vector's binary search `Result` to either break out and return the solution, or use the `Result` yielding the position the new value should get inserted into. This took away may first approach of re-sorting every push so I could use the binary search instead of going in order thru the vector. Now I insert at the correct location. Timing went from 6-7 seconds to <1 second.
+
+### Day 2
+
+Part 1 was mostly following the Rust book's info on HashMap. Borrowing ownership feels VERY weird.
+
+Part 2, holy cow. Rust is Scala and Erlang and Haskell and Clojure and C++ all rolled up into one.

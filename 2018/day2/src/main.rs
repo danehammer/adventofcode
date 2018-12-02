@@ -2,27 +2,52 @@ use std::io::BufReader;
 use std::io::BufRead;
 use std::fs::File;
 use std::collections::HashMap;
+use std::result::Result;
 
 fn main() {
     let f = File::open("input.txt").unwrap();
-    let file = BufReader::new(&f);
+    let lines = BufReader::new(&f).lines();
 
-    let mut twofers = 0;
-    let mut threefers = 0;
+    let mut ids: Vec<String> = Vec::new();
 
-    for (_, line) in file.lines().enumerate() {
+    for line in lines {
         let l = line.unwrap();
-        if has_exactly(2, &l) {
-            twofers += 1;
-        }
-        if has_exactly(3, &l) {
-            threefers += 1;
-        }
+        ids.push(l);
     }
 
-    println!("Twofers: {}", twofers);
-    println!("Threefers: {}", threefers);
-    println!("Checksum: {}", twofers * threefers);
+    for id in &ids {
+        let ids = ids.clone();
+        let r = find_closest(&id, &ids);
+        match r {
+            Ok(v) => {
+                println!("id {} is almost {}", id, v);
+                break;
+            },
+            _ => ()
+        }
+    }
+}
+
+fn find_closest(comp: &String, ids: &Vec<String>) -> Result<String, &'static str> {
+    for id in ids {
+        if comp == id {
+            continue;
+        }
+        let r = compare_ids(&comp, &id);
+        if r.is_ok() {
+            return Ok(id.to_string());
+        }
+    }
+    return Err("no closeys found");
+}
+
+fn compare_ids(a: &String, b: &String) -> Result<(), &'static str> {
+    let pairs = a.chars().zip(b.chars());
+    let diffs = pairs.filter(|(aChar, bChar)| aChar != bChar).collect::<Vec<(char, char)>>();
+    if diffs.len() == 1 {
+        return Ok(());
+    }
+    return Err("not the closeys");
 }
 
 fn has_exactly(num: i8, s: &String) -> bool {
