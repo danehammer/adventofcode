@@ -11,6 +11,7 @@ struct Claim {
     height: i16,
 }
 
+
 fn parse_claim(s: &String) -> Claim {
     let split = s.split(" ");
     let (mut id, mut right, mut top, mut width, mut height) = (0i16, 0i16, 0i16, 0i16, 0i16);
@@ -52,8 +53,8 @@ fn main() {
         claims.push(parse_claim(&l));
     }
 
-    //let mut claim_ids = claims.map(|&x| x.id).collect();
-    let mut dims: Vec<Vec<i16>> = Vec::new();
+    let mut claim_ids: Vec<i16> = claims.iter().map(|ref x| x.id).collect();
+    let mut dims: Vec<Vec<Vec<i16>>> = Vec::new();
     
     for claim in claims {
         // inner vec is row cells, offset by right
@@ -73,31 +74,23 @@ fn main() {
             // make sure we have cells in row
             for j in 0..(claim.right+claim.width+1) {
                 if j > row.len() as i16 {
-                    row.push(0);
+                    row.push(Vec::new());
                 }
             }
 
             for j in (claim.right)..(claim.right+claim.width) {
-                let cell_claims = row[j as usize] + 1;
+                let mut cell_claims = row[j as usize].clone();
+                cell_claims.push(claim.id);
+                if cell_claims.len() > 1 {
+                    claim_ids.retain(|&x| !cell_claims.contains(&x));
+                }
                 row.remove(j as usize);
-                row.insert(j as usize, cell_claims);
+                row.insert(j as usize, cell_claims.to_vec());
             }
             dims.remove(i as usize);
             dims.insert(i as usize, row);
         }
     }
 
-    let mut overlaps = 0;
-
-    for i in 0..dims.len() {
-        let row = &dims[i as usize];
-        for j in 0..row.len() {
-            if row[j] > 1 {
-                overlaps += 1;
-            }
-        }
-    }
-
-    //println!("Claim IDs: {:?}", claim_ids);
-    println!("Overlaps: {}", overlaps);
+    println!("Remaining: {:?}", claim_ids.pop().unwrap());
 }
