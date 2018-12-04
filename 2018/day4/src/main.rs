@@ -89,6 +89,30 @@ fn main() {
         }
     }
 
+    let mut consistent_guard = String::new();
+    let mut consistentness: i32 = 0;
+    let mut consistent_minute: i32 = 0;
+
+    for (id, guard) in &guards {
+
+        let mut most_common: i32 = 0;
+        let mut most_times: i32 = 0;
+
+        for (minute, times) in &guard.minutes {
+            if times > &most_times {
+                most_common = *minute;
+                most_times = *times;
+            }
+        }
+
+        if most_times > consistentness {
+            consistentness = most_times;
+            consistent_minute = most_common;
+            consistent_guard = id.to_string();
+        }
+    }
+
     println!("Guard {} slept {} minutes", sleepiest_guard, minutes_slept);
     println!("Guard {} is asleep at {} the most", sleepiest_guard, most_common);
+    println!("Guard {} likes to sleep at {}", consistent_guard, consistent_minute);
 }
