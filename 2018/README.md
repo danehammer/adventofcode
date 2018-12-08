@@ -53,3 +53,7 @@ this part of learning a new language.
 Part 2:
 It feels like higher level languages do all this memory copying and references for me. Because there's
 no GC, I have to care about it. But it sure seems tedious with the ownership compilation failures.
+
+### Day 5
+
+I think I hate the borrow checker. I miss golang. Give me back my understanding of how to write code. I struggle over and over with how to assign a variable that lives outside the block/statement/whatever that I want to assign it in.
